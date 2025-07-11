@@ -2,14 +2,11 @@
 #define TABLE_HPP
 
 #include <SDL.h>
-struct Point{
-	int x;
-	int y;
-};
+#include "Snake.hpp"
 
 class Table {
 	public:
-		Table(int width, int height, int cell_siz, int offset_x= 0, int offset_y = 0);
+		Table(int width, int height, int cell_siz, int offset_x, int offset_y);
 		//destructor
 		~Table();
 		//va a dibujar el tablero
@@ -19,7 +16,7 @@ class Table {
 		int get_width() const { return dimension.x; }
 		int get_height() const { return dimension.y; }
 		int get_cell_size() const { return cell_size; }
-		SDL_rect get_rect() const { return rect; }
+		SDL_Rect get_rect() const { return rect; }
 
 	private:
 		//dimension en termino de celdas, para manejar la logica de juego
@@ -30,5 +27,5 @@ class Table {
 		//esto representa el area en pixeles que ocupa el tablero en la ventana
 		//util para renderizar el fondo y bordes
 		SDL_Rect rect;
-}
+};
 #endif

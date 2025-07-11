@@ -37,30 +37,30 @@ void Snake::grow(){
 	hasGrown = true;
 }
 
-void render(SDL_Renderer* render,int cell_siz, int offset_x, int offset_y){
- if (!renderer) {
+void Snake::render(SDL_Renderer* render,int cell_siz, int offset_x, int offset_y){
+ if (!render) {
         std::cerr << "Error: Renderer es nulo en Snake::render." << std::endl;
         return;
     }
 
     // Dibuja la cabeza de la serpiente
-    SDL_SetRenderDrawColor(renderer, head_color.r, head_color.g, head_color.b, head_color.a);
+    SDL_SetRenderDrawColor(render, headColor.r, headColor.g, headColor.b, headColor.a);
     SDL_Rect head_rect;
-    head_rect.x = offset_x + body.front().x * cell_size;
-    head_rect.y = offset_y + body.front().y * cell_size;
-    head_rect.w = cell_size;
-    head_rect.h = cell_size;
-    SDL_RenderFillRect(renderer, &head_rect);
+    head_rect.x = offset_x + body.front().x * cell_siz;
+    head_rect.y = offset_y + body.front().y * cell_siz;
+    head_rect.w = cell_siz;
+    head_rect.h = cell_siz;
+    SDL_RenderFillRect(render, &head_rect);
 
     // Dibuja el resto del cuerpo de la serpiente
-    SDL_SetRenderDrawColor(renderer, body_color.r, body_color.g, body_color.b, body_color.a);
+    SDL_SetRenderDrawColor(render, bodyColor.r, bodyColor.g, bodyColor.b, bodyColor.a);
     for (size_t i = 1; i < body.size(); ++i) { // Empezamos desde el segundo segmento (índice 1)
         SDL_Rect body_segment_rect;
-        body_segment_rect.x = offset_x + body[i].x * cell_size;
-        body_segment_rect.y = offset_y + body[i].y * cell_size;
-        body_segment_rect.w = cell_size;
-        body_segment_rect.h = cell_size;
-        SDL_RenderFillRect(renderer, &body_segment_rect);
+        body_segment_rect.x = offset_x + body[i].x * cell_siz;
+        body_segment_rect.y = offset_y + body[i].y * cell_siz;
+        body_segment_rect.w = cell_siz;
+        body_segment_rect.h = cell_siz;
+        SDL_RenderFillRect(render, &body_segment_rect);
     }
 }
 
@@ -77,7 +77,7 @@ Point Snake::getHeadPosition() const {
 	return body[0];
 }
 
-Const std::vector<Point>& Snake::getBody() const{
+const std::vector<Point>& Snake::getBody() const{
 	return body;
 }
 

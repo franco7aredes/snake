@@ -3,12 +3,7 @@
 
 #include <SDL.h>
 #include "Table.hpp" 
-#include "Snake.hpp"
 
-struct Point {
-	int x;
-	int y;
-};
 // Posibles estados del juego (opcional, pero útil para expandir el juego)
 enum GameState {
     RUNNING,

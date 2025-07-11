@@ -126,16 +126,16 @@ void Game::handle_input() {
         } else if (event.type == SDL_KEYDOWN) {
             switch (event.key.keysym.sym) {
                 case SDLK_UP:
-                    player_snake->change_direction(UP);
+                    player_snake->changeDirection(Direction::UP);
                     break;
                 case SDLK_DOWN:
-                    player_snake->change_direction(DOWN);
+                    player_snake->changeDirection(Direction::DOWN);
                     break;
                 case SDLK_LEFT:
-                    player_snake->change_direction(LEFT);
+                    player_snake->changeDirection(Direction::LEFT);
                     break;
                 case SDLK_RIGHT:
-                    player_snake->change_direction(RIGHT);
+                    player_snake->changeDirection(Direction::RIGHT);
                     break;
                 case SDLK_p: // Pausar/Reanudar
                     if (current_state == RUNNING) {
@@ -248,9 +248,9 @@ void Game::generate_food() {
 
 bool Game::check_collision() {
     // 1. Colisión con los bordes del tablero
-    Point head_pos = player_snake->get_head_position();
+    Point head_pos = player_snake->getHeadPosition();
     // 2. Colisión consigo misma 
-    return !(game_table->is_inside(head_pos-x, head_pos.y)) ||
+    return !(game_table->is_inside(head_pos.x, head_pos.y)) ||
 	    player_snake->checkCollision();
 
 }

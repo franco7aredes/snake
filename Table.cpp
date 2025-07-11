@@ -1,8 +1,8 @@
 #include "Table.hpp"
 #include <iostream>
 
-Table::Table (int width, int height, int cell_siz, int offset_x= 0,
-		int offset_y = 0){
+Table::Table (int width, int height, int cell_siz, int offset_x,
+		int offset_y){
 	dimension.x = width;
 	dimension.y = height;
 	cell_size = cell_siz;
@@ -16,7 +16,6 @@ Table::Table (int width, int height, int cell_siz, int offset_x= 0,
 }
 
 Table :: ~Table(){
-	SDL_DestroyRenderer(renderer);
 	std::cout << "Table destroyed." << std::endl;
 }
 

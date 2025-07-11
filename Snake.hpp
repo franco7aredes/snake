@@ -33,6 +33,6 @@ class Snake {
 		bool hasGrown;
 		SDL_Color headColor;
 		SDL_Color bodyColor;
-}
+};
 
 #endif
