@@ -9,7 +9,9 @@ struct Point{
 
 class Table {
 	public:
-		Table(int width, int height, int cell_size, int offset_x= 0, int offset_y = 0);
+		Table(int width, int height, int cell_siz, int offset_x= 0, int offset_y = 0);
+		//destructor
+		~Table();
 		//va a dibujar el tablero
 		void render (SDL_Renderer* renderer);
 		bool is_inside(int x, int y);

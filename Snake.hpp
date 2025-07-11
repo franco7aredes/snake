@@ -25,6 +25,7 @@ class Snake {
 		Point getHeadPosition() const;
 		const std::vector<Point>& getBody() const; // devuelve todos los segmentos del cuerpo
 		bool checkCollision() const; // revisa si hay colision
+		void render(SDL_Renderer* render,int cell_siz, int x, int y);
 
 	private:
 		std::vector<Point> body;
