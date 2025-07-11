@@ -10,6 +10,8 @@ Snake::Snake(int startX, int startY) {
 	currentDirection = Direction::RIGHT;
 	// empieza sin haber crecido
 	hasGrown = false;
+	headColor = {0, 255, 0, 0};
+	bodyColor = {20, 20, 20, 20};
 }
 
 void Snake::move(){
@@ -33,6 +35,33 @@ void Snake::move(){
 
 void Snake::grow(){
 	hasGrown = true;
+}
+
+void render(SDL_Renderer* render,int cell_siz, int offset_x, int offset_y){
+ if (!renderer) {
+        std::cerr << "Error: Renderer es nulo en Snake::render." << std::endl;
+        return;
+    }
+
+    // Dibuja la cabeza de la serpiente
+    SDL_SetRenderDrawColor(renderer, head_color.r, head_color.g, head_color.b, head_color.a);
+    SDL_Rect head_rect;
+    head_rect.x = offset_x + body.front().x * cell_size;
+    head_rect.y = offset_y + body.front().y * cell_size;
+    head_rect.w = cell_size;
+    head_rect.h = cell_size;
+    SDL_RenderFillRect(renderer, &head_rect);
+
+    // Dibuja el resto del cuerpo de la serpiente
+    SDL_SetRenderDrawColor(renderer, body_color.r, body_color.g, body_color.b, body_color.a);
+    for (size_t i = 1; i < body.size(); ++i) { // Empezamos desde el segundo segmento (índice 1)
+        SDL_Rect body_segment_rect;
+        body_segment_rect.x = offset_x + body[i].x * cell_size;
+        body_segment_rect.y = offset_y + body[i].y * cell_size;
+        body_segment_rect.w = cell_size;
+        body_segment_rect.h = cell_size;
+        SDL_RenderFillRect(renderer, &body_segment_rect);
+    }
 }
 
 void Snake::changeDirection(Direction newdir){
@@ -59,6 +88,5 @@ bool Snake::checkCollision() const{
 			return true;
 		}
 	}
-	//acá falta la logica para revisar si choca contra los limites del tablero, si es que vamos a utilizar esa mecanica
 	return false;
 }

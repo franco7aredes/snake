@@ -20,7 +20,7 @@ Table :: ~Table(){
 	std::cout << "Table destroyed." << std::endl;
 }
 
-Table:: void render (SDL_Renderer* renderer){
+void Table::render (SDL_Renderer* renderer){
 	if (!renderer){
 		std::cerr << "Error: renderer nulo en la función render" << std::endl;
 		return;
@@ -34,11 +34,11 @@ Table:: void render (SDL_Renderer* renderer){
 	SDL_RenderDrawRect(renderer, &rect);
 }
 
-Table:: bool is_inside( int x, int y){
+bool Table::is_inside( int x, int y){
 	return x>0 && x<dimension.x && y>0 && y<dimension.y;
 }
 
-Table:: SDL_Rect get_cell_rect (int x, int y){
+SDL_Rect Table::get_cell_rect (int x, int y){
 	SDL_Rect cell_rect;
 	cell_rect.x = rect.x + x * cell_size;
 	cell_rect.y = rect.y + y * cell_size;
