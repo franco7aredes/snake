@@ -13,8 +13,7 @@ CXXFLAGS = -Wall -g -std=c++17 -O2
 # `sdl2-config --libs`: Obtiene las banderas de enlace de SDL2 (bibliotecas a enlazar)
 # Asegúrate de que `sdl2-config` esté en tu PATH o especifica la ruta completa
 SDL_CFLAGS = $(shell sdl2-config --cflags)
-SDL_LIBS = $(shell sdl2-config --libs)
-CURSES = $(shell -lncurses)
+SDL_LIBS = $(shell sdl2-config --libs) -lSDL2main
 
 # Archivos fuente del proyecto
 SRCS = Main.cpp Game.cpp Table.cpp Snake.cpp
@@ -33,13 +32,13 @@ all: $(TARGET)
 
 # Regla para construir el ejecutable
 $(TARGET): $(OBJS)
-	$(CXX) $(OBJS) -o $(TARGET) $(CURSES)
+	$(CXX) $(OBJS) -o $(TARGET) $(SDL_LIBS)
 
 # Regla para compilar cada archivo .cpp en su archivo .o correspondiente
 # $<: El primer pre-requisito (el archivo .cpp)
 # $@: El objetivo (el archivo .o)
 %.o: %.cpp
-	$(CXX) $(CXXFLAGS) $(CURSES) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(SDL_CFLAGS) -c $< -o $@
 
 # Regla para limpiar los archivos generados (objetos y ejecutable)
 clean:

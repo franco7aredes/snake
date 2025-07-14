@@ -1,7 +1,7 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 
-#include <SDL.h>
+#include <ncurses.h>
 #include "Table.hpp" 
 
 // Posibles estados del juego (opcional, pero útil para expandir el juego)
@@ -57,6 +57,7 @@ private:
     void generate_food();       // Genera una nueva posición para la comida
     bool check_collision();     // Comprueba colisiones (paredes, consigo misma)
     bool check_food_eaten();    // Comprueba si la serpiente comió la comida
+    bool check_collision(Point dot); //Comprueba colisiones de la comida
 };
 
 #endif // GAME_HPP

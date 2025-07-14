@@ -1,7 +1,7 @@
 #ifndef TABLE_HPP
 #define TABLE_HPP
 
-#include <SDL.h>
+#include <ncurses.h>
 #include "Snake.hpp"
 
 class Table {
