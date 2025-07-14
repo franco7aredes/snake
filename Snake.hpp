@@ -31,6 +31,7 @@ class Snake {
 	private:
 		std::vector<Point> body;
 		Direction currentDirection;
+		Direction nextDirection;
 		bool hasGrown;
 		SDL_Color headColor;
 		SDL_Color bodyColor;

@@ -29,7 +29,7 @@ Game::~Game() {
 // Inicializa SDL, ventana, renderer y objetos del juego
 bool Game::initialize() {
     // 1. Inicializar SDL
-    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+    if (SDL_Init(SDL_INIT_VIDEO |SDL_INIT_EVENTS ) < 0) {
         std::cerr << "SDL could not initialize! SDL_Error: " << SDL_GetError() << std::endl;
         return false;
     }
