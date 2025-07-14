@@ -90,3 +90,12 @@ bool Snake::checkCollision() const{
 	}
 	return false;
 }
+
+bool Snake::checkCollision(Point dot){
+	for (size_t i = 0; i<body.size();++i){
+		if (body[i].x == dot.x && body[i].y == dot.y){
+			return true;
+		}
+	}
+	return false;
+}

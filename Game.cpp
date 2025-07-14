@@ -83,8 +83,8 @@ bool Game::initialize() {
     player_snake = new Snake(table_width_cells / 2, table_height_cells / 2); // Serpiente empieza en el centro
     // ... game_food = new Food(); // Si decides crear una clase Food
 
-    // 5. Generar la primera comida (asumiendo que Snake.hpp tiene un miembro para la comida o que la manejarás aquí)
-    // Por ahora, lo dejamos pendiente hasta definir cómo manejar la comida.
+    // 5. Generar la primera comida 
+    generate_food();
 
     is_running = true;
     std::cout << "Game initialized successfully." << std::endl;
@@ -168,9 +168,8 @@ void Game::update() {
     if (check_food_eaten()) {
         player_snake->grow(); // La serpiente crece
         // Aumentar la velocidad o la puntuación aquí
-    }
-
         generate_food(); // Genera nueva comida
+    }
 }
 
 // Dibuja todos los elementos en pantalla
@@ -186,16 +185,14 @@ void Game::render() {
 
     // Dibujar la serpiente
     if (player_snake) {
-        // Necesitamos una forma de que Snake dibuje sus segmentos usando el table->get_cell_rect
-        // Pasaremos el renderer y el table para que Snake pueda obtener las coordenadas correctas
         player_snake->render(renderer, game_table->get_cell_size(), game_table->get_rect().x, game_table->get_rect().y);
     }
 
     // Dibujar la comida (esto es un placeholder, asume que la comida se maneja en Game o tiene su propia clase)
     // Para la comida, necesitaremos una coordenada Point food_position; en Game
-    // SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255); // Rojo para la comida
-    // SDL_Rect food_rect = game_table->get_cell_rect(food_position.x, food_position.y);
-    // SDL_RenderFillRect(renderer, &food_rect);
+    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255); // Rojo para la comida
+    SDL_Rect food_rect = game_table->get_cell_rect(food_position.x, food_position.y);
+    SDL_RenderFillRect(renderer, &food_rect);
 
 
     // Renderizar texto de "Game Over" o "Pausa"
@@ -234,19 +231,27 @@ void Game::cleanup() {
 
 void Game::generate_food() {
     // Genera una posición aleatoria para la comida dentro de los límites del tablero
-    // Asegúrate de que no aparezca en la misma posición que la serpiente
-    // Necesitarás una variable `Point food_position;` en Game.hpp
-    // Y un generador de números aleatorios.
-    // Ejemplo muy básico (sin verificar colisión con la serpiente):
+    // no aparece en la misma posición que la serpiente
+    // Ejemplo muy básico (verificando colisión con la serpiente):
 
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_int_distribution<> dis_x(0, game_table->get_width() - 1);
-    std::uniform_int_distribution<> dis_y(0, game_table->get_height() - 1);
+    bool aux = true;
+    while(aux){
+    	std::random_device rd;
+    	std::mt19937 gen(rd());
+    	std::uniform_int_distribution<> dis_x(0, game_table->get_width() - 1);
+    	std::uniform_int_distribution<> dis_y(0, game_table->get_height() - 1);
     food_position.x = dis_x(gen);
     food_position.y = dis_y(gen);
-    std::cout << "Food generated at: (" << food_position.x << ", " << food_position.y << ")" << std::endl;
+    if (!(player_snake->checkCollision(food_position))){
+    	std::cout << "Food generated at: (" << food_position.x << ", " << food_position.y << ")" << std::endl;
+	aux = false;
+    }
+    }
 }
+
+bool Game::check_collision(Point dot){
+	return !(game_table->is_inside(dot.x, dot.y));
+	}
 
 bool Game::check_collision() {
     // 1. Colisión con los bordes del tablero
