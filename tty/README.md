@@ -6,3 +6,4 @@ Para probar esta versión hace falta:
 sudo apt install libncursesw5-dev
 make
 ./snakegame
+para salir, ctrl+c en la terminal donde se inicia.

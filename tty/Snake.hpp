@@ -26,15 +26,13 @@ class Snake {
 		const std::vector<Point>& getBody() const; // devuelve todos los segmentos del cuerpo
 		bool checkCollision() const; // revisa si hay colision consigo misma
 		bool checkCollision(Point dot); // auxiliar para evitar que la comida aparezca en la vibora
-		void render(SDL_Renderer* render,int cell_siz, int offset_x, int offset_y);
+		void render();
 
 	private:
 		std::vector<Point> body;
 		Direction currentDirection;
 		Direction nextDirection;
 		bool hasGrown;
-		SDL_Color headColor;
-		SDL_Color bodyColor;
 };
 
 #endif

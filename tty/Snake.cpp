@@ -11,8 +11,6 @@ Snake::Snake(int startX, int startY) {
 	nextDirection = currentDirection;
 	// empieza sin haber crecido
 	hasGrown = false;
-	headColor = {0, 255, 0, 0};
-	bodyColor = {20, 20, 20, 20};
 }
 
 void Snake::move(){
@@ -39,31 +37,13 @@ void Snake::grow(){
 	hasGrown = true;
 }
 
-void Snake::render(SDL_Renderer* render,int cell_siz, int offset_x, int offset_y){
- if (!render) {
-        std::cerr << "Error: Renderer es nulo en Snake::render." << std::endl;
-        return;
-    }
-
+void Snake::render(){
     // Dibuja la cabeza de la serpiente
-    SDL_SetRenderDrawColor(render, headColor.r, headColor.g, headColor.b, headColor.a);
-    SDL_Rect head_rect;
-    head_rect.x = offset_x + body.front().x * cell_siz;
-    head_rect.y = offset_y + body.front().y * cell_siz;
-    head_rect.w = cell_siz;
-    head_rect.h = cell_siz;
-    SDL_RenderFillRect(render, &head_rect);
-
+    // Primero la fila, luego la columna
+    mvprintw(body.front().y, body.front().x, "@");
     // Dibuja el resto del cuerpo de la serpiente
-    SDL_SetRenderDrawColor(render, bodyColor.r, bodyColor.g, bodyColor.b, bodyColor.a);
-    for (size_t i = 1; i < body.size(); ++i) { // Empezamos desde el segundo segmento (índice 1)
-        SDL_Rect body_segment_rect;
-        body_segment_rect.x = offset_x + body[i].x * cell_siz;
-        body_segment_rect.y = offset_y + body[i].y * cell_siz;
-        body_segment_rect.w = cell_siz;
-        body_segment_rect.h = cell_siz;
-        SDL_RenderFillRect(render, &body_segment_rect);
-    }
+    for(size_t i = 1; i<body.size(); ++i){
+	    mvprintw(body[i].y, body[i].x, "O");
 }
 
 void Snake::changeDirection(Direction newdir){

@@ -14,7 +14,7 @@ enum GameState {
 class Game {
 public:
     // Constructor
-    Game(int width, int height, int cell_size, const char* title);
+    Game();
 
     // Destructor
     ~Game();
@@ -26,9 +26,6 @@ public:
     void run();
 
 private:
-    // Punteros a los objetos de SDL
-    SDL_Window* window;
-    SDL_Renderer* renderer;
 
     // Dimensiones de la ventana
     int screen_width;
@@ -43,9 +40,6 @@ private:
     // Estado del juego
     GameState current_state;
     bool is_running; // Controla el bucle principal
-
-    // Velocidad del juego (cuántos milisegundos entre actualizaciones lógicas)
-    Uint32 game_speed_ms;
 
     // Métodos privados para la gestión interna del juego
     void handle_input();   // Procesa las entradas del usuario

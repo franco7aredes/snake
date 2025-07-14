@@ -4,19 +4,15 @@
 #include <chrono> 
 
 // Constructor
-Game::Game(int width, int height, int cell_size, const char* title)
-    : window(nullptr),
-      renderer(nullptr),
-      screen_width(width),
-      screen_height(height),
-      game_table(nullptr),
+Game::Game()
+    : game_table(nullptr),
       player_snake(nullptr),
       current_state(RUNNING),
       is_running(false),
       game_speed_ms(150) // Velocidad inicial de la serpiente (ms por movimiento)
 {
     // El constructor solo inicializa variables miembro.
-    // La inicialización de SDL y la creación de objetos se hacen en initialize().
+    // Los valores de la ventana se obtendrán en el initialize
     std::cout << "Game object created." << std::endl;
 }
 
@@ -28,67 +24,16 @@ Game::~Game() {
 
 // Inicializa SDL, ventana, renderer y objetos del juego
 bool Game::initialize() {
-    // 1. Inicializar SDL
-    if (SDL_Init(SDL_INIT_VIDEO |SDL_INIT_EVENTS ) < 0) {
-        std::cerr << "SDL could not initialize! SDL_Error: " << SDL_GetError() << std::endl;
-        return false;
-    }
-
-    // 2. Crear ventana
-    window = SDL_CreateWindow("Snake Game",
-                              SDL_WINDOWPOS_UNDEFINED,
-                              SDL_WINDOWPOS_UNDEFINED,
-                              screen_width,
-                              screen_height,
-                              SDL_WINDOW_SHOWN);
-    if (!window) {
-        std::cerr << "Window could not be created! SDL_Error: " << SDL_GetError() << std::endl;
-        return false;
-    }
-
-    // 3. Crear renderer
-    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-    if (!renderer) {
-        std::cerr << "Renderer could not be created! SDL_Error: " << SDL_GetError() << std::endl;
-        return false;
-    }
-
-    // 4. Inicializar objetos del juego
-    // Offset para el tablero (podrías centrarlo, dejar un margen, etc.)
-    // Aquí, por simplicidad, el tablero ocupa toda la ventana.
-    // Si quieres un margen, ajusta el offset_x y offset_y, y calcula el ancho/alto del tablero
-    // en relación a la ventana y los márgenes deseados.
-    int table_offset_x = 0;
-    int table_offset_y = 0;
-
-    // Ajustamos las dimensiones de la tabla para que encajen en la ventana con un margen, si lo deseas.
-    // Para este ejemplo, haremos que la tabla sea un poco más pequeña que la ventana
-    // o que las dimensiones de la tabla coincidan con las de la ventana si lo estableciste así.
-    int table_width_cells = screen_width / (screen_height / 20); // Ejemplo: 20 celdas de alto, calcular ancho proporcional
-    int table_height_cells = screen_height / (screen_height / 20); // Ejemplo: 20 celdas de alto
-    int table_cell_size = screen_height / 20; // Tamaño de celda basado en la altura de la ventana para que sea cuadrada.
-
-    // Podrías ajustar table_width_cells y table_height_cells a valores fijos como 30x20
-    // y luego calcular el screen_width/height basado en eso y el cell_size.
-    // O puedes hacer que el tablero ocupe la ventana completa con las dimensiones dadas.
-    // Por ahora, asumamos que las dimensiones `width` y `height` pasadas al constructor de Game
-    // son las dimensiones *en celdas* del tablero y la ventana se ajustará.
-    // O mejor, las dimensiones de la ventana y de la celda, y calculamos las celdas:
-    table_cell_size = 20; // Por ejemplo, cada celda de 20x20 píxeles
-    table_width_cells = screen_width / table_cell_size;
-    table_height_cells = screen_height / table_cell_size;
-
-
-    game_table = new Table(table_width_cells, table_height_cells, table_cell_size, table_offset_x, table_offset_y);
-    player_snake = new Snake(table_width_cells / 2, table_height_cells / 2); // Serpiente empieza en el centro
-    // ... game_food = new Food(); // Si decides crear una clase Food
-
-    // 5. Generar la primera comida 
-    generate_food();
-
-    is_running = true;
-    std::cout << "Game initialized successfully." << std::endl;
-    return true;
+	initscr();
+	noecho();
+	cbreak();
+	curs_set(0);
+	timeout(game_speed_ms);
+	getmaxyx(stdscr, screen_height, screen_width);
+	game_table = new Table(screen_width, screen_height);
+	player_snake = new Snake (screen_width/2, screen_height/2);
+	generate_food();
+	is_running = true;
 }
 
 // Bucle principal del juego
@@ -98,52 +43,42 @@ void Game::run() {
         return;
     }
 
-    Uint32 last_update_time = SDL_GetTicks(); // Tiempo del último update
 
     // Bucle principal
     while (is_running) {
         handle_input(); // Siempre manejar entrada
-
-        Uint32 current_time = SDL_GetTicks();
-        if (current_time - last_update_time >= game_speed_ms) {
-            update(); // Actualizar lógica solo si ha pasado suficiente tiempo
-            last_update_time = current_time;
-        }
-
+        update(); 
         render(); // Siempre renderizar
 
-        // Control de FPS (opcional, SDL_RENDERER_PRESENTVSYNC ya lo hace en cierta medida)
-        // SDL_Delay(1); // Pequeño delay para no consumir CPU al máximo
     }
 }
 
 // Maneja la entrada del usuario
 void Game::handle_input() {
-    SDL_Event event;
-    while (SDL_PollEvent(&event)) {
-        if (event.type == SDL_QUIT) {
-            is_running = false; // El usuario cerró la ventana
-        } else if (event.type == SDL_KEYDOWN) {
-            switch (event.key.keysym.sym) {
-                case SDLK_w:
-                    player_snake->changeDirection(Direction::UP);
-                    break;
-                case SDLK_s:
-                    player_snake->changeDirection(Direction::DOWN);
-                    break;
-                case SDLK_a:
-                    player_snake->changeDirection(Direction::LEFT);
-                    break;
-                case SDLK_d:
-                    player_snake->changeDirection(Direction::RIGHT);
-                    break;
-                case SDLK_p: // Pausar/Reanudar
-                    if (current_state == RUNNING) {
-                        current_state = PAUSED;
-                    } else if (current_state == PAUSED) {
-                        current_state = RUNNING;
-                    }
-                    break;
+    int ch = getch();
+    if (ch = ERR){
+	    return;
+    }
+    switch (ch){
+    	case 'w':
+        	player_snake->changeDirection(Direction::UP);
+                break;
+        case 's':
+                player_snake->changeDirection(Direction::DOWN);
+                break;
+        case 'a':
+                player_snake->changeDirection(Direction::LEFT);
+                break;
+        case 'd':
+                player_snake->changeDirection(Direction::RIGHT);
+                break;
+        case 'p': // Pausar/Reanudar
+                if (current_state == RUNNING) {
+             	   current_state = PAUSED;
+                } else if (current_state == PAUSED) {
+                   current_state = RUNNING;
+                }
+                break;
                 // Otros controles como reiniciar, etc.
             }
         }
@@ -175,36 +110,30 @@ void Game::update() {
 // Dibuja todos los elementos en pantalla
 void Game::render() {
     // Limpiar la pantalla
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // Fondo negro
-    SDL_RenderClear(renderer);
+	clear();
 
     // Dibujar el tablero
     if (game_table) {
-        game_table->render(renderer);
+        game_table->render();
     }
 
     // Dibujar la serpiente
     if (player_snake) {
-        player_snake->render(renderer, game_table->get_cell_size(), game_table->get_rect().x, game_table->get_rect().y);
+        player_snake->render();
     }
 
-    // Dibujar la comida (esto es un placeholder, asume que la comida se maneja en Game o tiene su propia clase)
-    // Para la comida, necesitaremos una coordenada Point food_position; en Game
-    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255); // Rojo para la comida
-    SDL_Rect food_rect = game_table->get_cell_rect(food_position.x, food_position.y);
-    SDL_RenderFillRect(renderer, &food_rect);
-
+    // Dibujar la comida 
+    mvprintw(food_position.x, food_position.y, "#");
 
     // Renderizar texto de "Game Over" o "Pausa"
     if (current_state == GAME_OVER) {
         // Aquí podrías renderizar texto "GAME OVER"
-        // Requiere SDL_ttf, que no hemos inicializado. Por ahora, solo un mensaje en consola.
     } else if (current_state == PAUSED) {
         // Aquí podrías renderizar texto "PAUSED"
     }
 
     // Presentar lo dibujado en pantalla
-    SDL_RenderPresent(renderer);
+    refresh();
 }
 
 // Libera los recursos de SDL y los objetos del juego
@@ -215,15 +144,8 @@ void Game::cleanup() {
     delete game_table;
     game_table = nullptr;
 
-    if (renderer) {
-        SDL_DestroyRenderer(renderer);
-        renderer = nullptr;
-    }
-    if (window) {
-        SDL_DestroyWindow(window);
-        window = nullptr;
-    }
-    SDL_Quit();
+    // vuelve la terminal a la normalidad
+    endwin();
     std::cout << "Game resources cleaned up." << std::endl;
 }
 
