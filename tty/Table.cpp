@@ -27,6 +27,6 @@ void Table::render (){
 }
 
 bool Table::is_inside( int x, int y){
-	return x>0 && x<dimension.x-1 && y>0 && y<dimension.y-1;
+	return x>1 && x<dimension.x-1 && y>1 && y<dimension.y-1;
 }
 

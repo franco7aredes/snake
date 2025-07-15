@@ -22,7 +22,7 @@ Game::~Game() {
     std::cout << "Game object destroyed." << std::endl;
 }
 
-// Inicializa SDL, ventana, renderer y objetos del juego
+// Inicializa objetos del juego
 bool Game::initialize() {
 	initscr();
 	noecho();
@@ -114,13 +114,12 @@ void Game::render() {
         game_table->render();
     }
 
+    // Dibujar la comida 
+    mvprintw(food_position.y, food_position.x, "#");
     // Dibujar la serpiente
     if (player_snake) {
         player_snake->render();
     }
-
-    // Dibujar la comida 
-    mvprintw(food_position.x, food_position.y, "#");
 
     // Renderizar texto de "Game Over" o "Pausa"
     if (current_state == GAME_OVER) {
@@ -133,7 +132,7 @@ void Game::render() {
     refresh();
 }
 
-// Libera los recursos de SDL y los objetos del juego
+// Libera los objetos del juego
 void Game::cleanup() {
     delete player_snake;
     player_snake = nullptr;
@@ -157,8 +156,8 @@ void Game::generate_food() {
     while(aux){
     	std::random_device rd;
     	std::mt19937 gen(rd());
-    	std::uniform_int_distribution<> dis_x(0, game_table->get_width() - 1);
-    	std::uniform_int_distribution<> dis_y(0, game_table->get_height() - 1);
+    	std::uniform_int_distribution<> dis_x(1, game_table->get_width() - 2);
+    	std::uniform_int_distribution<> dis_y(1, game_table->get_height() - 2);
         food_position.x = dis_x(gen);
         food_position.y = dis_y(gen);
         if (!(player_snake->checkCollision(food_position))){
