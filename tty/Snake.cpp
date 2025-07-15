@@ -44,6 +44,7 @@ void Snake::render(){
     // Dibuja el resto del cuerpo de la serpiente
     for(size_t i = 1; i<body.size(); ++i){
 	    mvprintw(body[i].y, body[i].x, "O");
+    }
 }
 
 void Snake::changeDirection(Direction newdir){

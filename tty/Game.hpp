@@ -34,9 +34,9 @@ private:
     // Objetos del juego
     Table* game_table;
     Snake* player_snake;
-    // ... Podríamos añadir Food* game_food; más adelante
     Point food_position;
 
+    uint32_t game_speed_ms;
     // Estado del juego
     GameState current_state;
     bool is_running; // Controla el bucle principal

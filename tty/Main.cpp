@@ -3,7 +3,7 @@
 
 int main(int argc, char* argv[]) {
 
-    Game myGame(); 
+    Game myGame; 
 
     if (!myGame.initialize()) {
         // Manejar error de inicialización

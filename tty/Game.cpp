@@ -7,9 +7,9 @@
 Game::Game()
     : game_table(nullptr),
       player_snake(nullptr),
+      game_speed_ms(150), // Velocidad inicial de la serpiente (ms por movimiento)
       current_state(RUNNING),
-      is_running(false),
-      game_speed_ms(150) // Velocidad inicial de la serpiente (ms por movimiento)
+      is_running(false)
 {
     // El constructor solo inicializa variables miembro.
     // Los valores de la ventana se obtendrán en el initialize
@@ -34,6 +34,7 @@ bool Game::initialize() {
 	player_snake = new Snake (screen_width/2, screen_height/2);
 	generate_food();
 	is_running = true;
+	return true;
 }
 
 // Bucle principal del juego
@@ -56,7 +57,7 @@ void Game::run() {
 // Maneja la entrada del usuario
 void Game::handle_input() {
     int ch = getch();
-    if (ch = ERR){
+    if (ch == ERR){
 	    return;
     }
     switch (ch){
@@ -81,8 +82,6 @@ void Game::handle_input() {
                 break;
                 // Otros controles como reiniciar, etc.
             }
-        }
-    }
 }
 
 // Actualiza la lógica del juego
@@ -96,7 +95,6 @@ void Game::update() {
 
     if (check_collision()) {
         current_state = GAME_OVER;
-        std::cout << "GAME OVER! Collision detected." << std::endl;
         // is_running = false; // Puedes terminar el juego o mostrar una pantalla de game over
     }
 
@@ -162,12 +160,11 @@ void Game::generate_food() {
     	std::mt19937 gen(rd());
     	std::uniform_int_distribution<> dis_x(0, game_table->get_width() - 1);
     	std::uniform_int_distribution<> dis_y(0, game_table->get_height() - 1);
-    food_position.x = dis_x(gen);
-    food_position.y = dis_y(gen);
-    if (!(player_snake->checkCollision(food_position))){
-    	std::cout << "Food generated at: (" << food_position.x << ", " << food_position.y << ")" << std::endl;
-	aux = false;
-    }
+        food_position.x = dis_x(gen);
+        food_position.y = dis_y(gen);
+        if (!(player_snake->checkCollision(food_position))){
+		aux = false;
+        }
     }
 }
 
