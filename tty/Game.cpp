@@ -89,7 +89,6 @@ void Game::update() {
     if (current_state != RUNNING) {
         return; // No actualizar si el juego está pausado o terminado
     }
-
     player_snake->move(); // Mueve la serpiente
     handle_input();
 
